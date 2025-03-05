@@ -1590,7 +1590,7 @@ export default function QuestionEditor({
           type="submit"
           loading={deleteQuestionStatus === "loading"}
           onClick={() => {
-            if (currQuestionId && currVariationId) {
+            if (currQuestionId !== undefined && currVariationId !== undefined){
               deleteQuestion({
                 questionId: currQuestionId,
                 variationId: currVariationId,
