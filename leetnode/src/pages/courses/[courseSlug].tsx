@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { Document, Page } from "react-pdf";
+import { Carousel } from "@mantine/carousel";
 
 import CourseDiscussion from "@/components/course/CourseDiscussion";
 import PracticeQuestion from "@/components/course/PracticeQuestion";
@@ -24,7 +25,7 @@ import {
 import {
   useMediaQuery, useSessionStorage, useViewportSize,
 } from "@mantine/hooks";
-import { Course, CourseMedia, Mastery, Topic } from "@prisma/client";
+import { Course, CourseMedia, Mastery, Topic, CourseVideo } from "@prisma/client";
 import {
   IconApps, IconArrowBarLeft, IconArrowLeft, IconArrowRight, IconChartLine,
   IconChevronsLeft, IconChevronsRight, IconDownload, IconMessages,
@@ -47,7 +48,7 @@ export type UserQuestionWithAttemptsType = {
 export default function CourseMainPage({
   courseDetails,
 }: {
-  courseDetails: Course & { courseMedia: CourseMedia[] };
+  courseDetails: Course & { courseMedia: CourseMedia[] } & { courseVideo: CourseVideo[]};
 }) {
   const { theme, classes, cx } = useStyles();
   const { width } = useViewportSize();
@@ -73,6 +74,33 @@ export default function CourseMainPage({
   const [pageNumber, setPageNumber] = useState(1);
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
+  }
+
+  function CarouselWrapper({ children }: { children: React.ReactNode }) {
+    return (
+      <Carousel
+        slideSize="100%"
+        breakpoints={[
+          { maxWidth: "md", slideSize: "50%", slideGap: "sm" },
+          { maxWidth: "sm", slideSize: "100%" },
+        ]}
+        align="start"
+        slideGap="md"
+        controlsOffset={-20}
+        controlSize={30}
+        height="100%"
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",  // Ensure the carousel content stacks correctly
+          height: "100%",  // Explicit height here
+        }}
+        pb="xl"
+        withIndicators
+      >
+        {children}
+      </Carousel>
+    );
   }
 
   const router = useRouter();
@@ -347,20 +375,29 @@ export default function CourseMainPage({
           ))
         ) : active === "Lecture Videos" ? (
           <Box className="h-[calc(100vh-180px)]" w="100%" h="100%">
-            <div
-              style={{ width: "100%", height: "100%" }}
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(modifiedVideo as string, {
-                  ADD_TAGS: ["iframe"],
-                  ADD_ATTR: [
-                    "allow",
-                    "allowfullscreen",
-                    "frameborder",
-                    "scrolling",
-                  ],
-                }),
-              }}
-            />
+            <CarouselWrapper>
+                {courseDetails.courseVideo.map((video) => (
+                    <Carousel.Slide key={video.videoName}>
+                      <div
+                        style={{ width: "100%", height: "100%" }}
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(/<iframe.*?>/.test(video.courseVideoURL as string) ? 
+                          video.courseVideoURL?.replace(/<iframe(.*?)>/g,'<iframe$1 width="100%" height="100%">')
+                          : video.courseVideoURL as string, 
+                          {
+                            ADD_TAGS: ["iframe"],
+                            ADD_ATTR: [
+                              "allow",
+                              "allowfullscreen",
+                              "frameborder",
+                              "scrolling",
+                            ],
+                          }),
+                        }}
+                      />
+                    </Carousel.Slide>
+                  ))}
+              </CarouselWrapper>
           </Box>
         ) : active === "Additional Resources" ? (
           <Box className="h-[calc(100vh-180px)]" w="100%" h="100%">

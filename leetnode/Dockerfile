@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-FROM node:18-alpine3.18 AS base
+FROM node:22-alpine3.20 AS base
 WORKDIR /app
 
 # Install dependencies only when needed
@@ -19,8 +19,10 @@ RUN \
   elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm@8.15.5 && pnpm i --prod --frozen-lockfile; \
   else echo "Lockfile not found." && exit 1; \
   fi
-RUN pnpx update-browserslist-db@latest
-RUN pnpx browserslist@latest --update-db
+
+RUN yarn global add pnpm@8.15.5
+RUN pnpm dlx update-browserslist-db@latest
+RUN pnpm dlx browserslist@latest --update-db
 
 # Rebuild the source code only when needed
 FROM base AS builder

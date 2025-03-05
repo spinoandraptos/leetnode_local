@@ -37,32 +37,32 @@ export default function ConsentPage() {
     queryFn: () =>
       axios.get<{
         name?: string;
-        nusnetId?: string;
+        nusId?: string;
         consentDate?: Date;
         isNewUser: boolean;
       }>("/api/init"),
   });
 
   const { mutate: getUserConsent, isLoading: mutationIsLoading } = useMutation({
-    mutationFn: ({ name, nusnetId }: { name?: string; nusnetId?: string }) =>
-      axios.post("/api/init", { name, nusnetId }),
+    mutationFn: ({ name, nusId }: { name?: string; nusId?: string }) =>
+      axios.post("/api/init", { name, nusId }),
     onSuccess: () => {
       router.push("/courses");
     },
   });
 
   const [fullname, setFullname] = useState("");
-  const [nusnetId, setNusnetId] = useState("");
+  const [nusId, setNusId] = useState("");
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const name = user?.data.name ?? fullname.trim();
-    if (name.length < 4 || nusnetId.trim().length !== 9) {
+    if (name.length < 4 || nusId.trim().length !== 9) {
       toast.error(
         "Please enter your fullname and NUSNET ID if you wish to consent to the study."
       );
       return;
     }
-    getUserConsent({ name, nusnetId });
+    getUserConsent({ name, nusId });
   };
 
   if (!user) {
@@ -145,11 +145,11 @@ export default function ConsentPage() {
                 placeholder="A0123456Z"
                 type="text"
                 disabled={user?.data.consentDate !== null}
-                value={user?.data.nusnetId ?? nusnetId}
-                onChange={(e) => setNusnetId(e.target.value.toUpperCase())}
+                value={user?.data.nusId ?? nusId}
+                onChange={(e) => setNusId(e.target.value.toUpperCase())}
                 error={
-                  nusnetId.trim().length > 0 &&
-                  nusnetId.trim().length !== 9 &&
+                  nusId.trim().length > 0 &&
+                  nusId.trim().length !== 9 &&
                   "Invalid NUSNET ID"
                 }
               />

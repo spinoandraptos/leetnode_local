@@ -21,9 +21,8 @@ export default async function handler(
             select: {
               topicName: true,
             },
-          },
         },
-      });
+      }});
       const mastery =
         req.body.period === "current"
           ? "masteryLevel"

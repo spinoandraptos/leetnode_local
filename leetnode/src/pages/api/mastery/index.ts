@@ -23,23 +23,25 @@ export default async function handler(
 
   const masteryExternal = Object.entries(data.Mastery);
   await Promise.all(
-    masteryExternal.map(([topicSlug, masteryLevel]) =>
-      prisma.mastery.upsert({
-        where: {
-          userId_topicSlug: {
+    masteryExternal.map(([topicSlug, masteryLevel]) =>{
+      if (topicSlug != null &&  masteryLevel != null){
+        prisma.mastery.upsert({
+          where: {
+            userId_topicSlug: {
+              userId: session?.user?.id as string,
+              topicSlug: topicSlug,
+            },
+          },
+          update: {
+            masteryLevel: masteryLevel,
+          },
+          create: {
             userId: session?.user?.id as string,
             topicSlug: topicSlug,
+            masteryLevel: masteryLevel,
           },
-        },
-        update: {
-          masteryLevel: masteryLevel,
-        },
-        create: {
-          userId: session?.user?.id as string,
-          topicSlug: topicSlug,
-          masteryLevel: masteryLevel,
-        },
-      })
+        })}
+    }
     )
   );
 

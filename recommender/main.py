@@ -60,9 +60,8 @@ def get_roster_model() -> Roster:
     Loads the latest roster file in the persistent storage.
     Updates the roster with the latest training model on startup.
     """
-
-    storage.download("roster.pkl", "roster.pkl")
-    with open("roster.pkl", "rb") as handle:
+    storage.download("roster_jc.pkl", "roster_jc.pkl")
+    with open("roster_jc.pkl", "rb") as handle:
         roster: Roster = pickle.load(handle)
     try:
         # Prevent API from crashing in case the training model doesn't fit the roster model
@@ -80,7 +79,7 @@ def get_all_topics() -> list[str]:
     Returns list of topics by parsing the topicSlugs in the seed_data.ts file.
     """
 
-    with open(os.path.dirname(__file__) + "/seed_data.ts", "r") as f:
+    with open(os.path.dirname(os.path.dirname(__file__)) + "/leetnode/prisma/seed_data.ts", "r") as f:
         text = f.read()
         topics = re.findall(r"topicSlug: .*", text)
         topics = set(topics)  # Remove duplicates
@@ -105,8 +104,8 @@ async def startup_event() -> None:
     """
 
     app.state.model = get_model()
+    #reset_roster()
     app.state.roster = get_roster_model()
-
 
 @app.get("/", status_code=status.HTTP_200_OK)
 def home() -> dict[str, str]:
@@ -322,7 +321,7 @@ def update_state_of_student(
         elif (
             student_id not in app.state.roster.skill_rosters[topic].students
         ):  # Add student if doesn't exist in the Roster
-            app.state.roster.add_students(topic, student_id)
+            app.state.roster.add_students(topic, [student_id])
 
         app.state.roster.update_state(
             topic, student_id, np.array([int(i) for i in correct])
@@ -414,8 +413,8 @@ def save_roster_model() -> None:
     """
     Saves the Roster model to disk and persistent storage.
     """
-    with open("roster.pkl", "wb") as handle:
+    with open("roster_jc.pkl", "wb") as handle:
         pickle.dump(app.state.roster, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    storage.child("roster.pkl").put("roster.pkl")
+    storage.child("roster_jc.pkl").put("roster_jc.pkl")
 
     print(f"[{time.strftime('%D %H:%M:%S')}] ROSTER MODEL SAVED")

@@ -12,7 +12,7 @@ export async function CustomSendVerificationRequest({
 }) {
   const { host } = new URL(url);
   const transport = createTransport({
-    host: "smtp.gmail.com",
+    service: 'gmail',
     port: 587,
     secure: false,
     auth: {
@@ -30,6 +30,7 @@ export async function CustomSendVerificationRequest({
     text: text({ url, host }),
     html: html({ url, host }),
   });
+  //console.log("SMTP RESULT: ", result);
   const failed = result.rejected.concat(result.pending).filter(Boolean);
   if (failed.length) {
     throw new Error(`Email(s) (${failed.join(", ")}) could not be sent`);
@@ -38,7 +39,7 @@ export async function CustomSendVerificationRequest({
 
 function html({ url, host }: { url: string; host: string }) {
   const escapedHost = host.replace(/\./g, "&#8203;.");
-  console.log("[VERIFICATION EMAIL]", url, host, escapedHost);
+  //console.log("[VERIFICATION EMAIL]", url, host, escapedHost);
 
   return `<!DOCTYPE html>
 <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml">

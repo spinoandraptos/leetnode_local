@@ -108,7 +108,7 @@ export default function Navbar({
       switch (router.query.error) {
         case "AccessDenied":
           errorMessage =
-            "Unfortunately you are not authorized to access LeetNode without a valid invite. \n\nIn the meantime, you may join our waitlist or if you think this is a mistake, please contact support.";
+            "Unfortunately you are not authorized to access LeetNode without registering. \n\n Please register your email first by clicking 'Join here'."
           break;
         case "Verification":
           errorMessage =

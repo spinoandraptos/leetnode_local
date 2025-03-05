@@ -11,6 +11,7 @@ export async function getCourseDetails(courseSlug: string) {
     },
     include: {
       courseMedia: true,
+      courseVideo: true
     },
   });
 }

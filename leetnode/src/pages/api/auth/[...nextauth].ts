@@ -1,12 +1,14 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
+import type { NextApiRequest, NextApiResponse } from "next"
 
 import { env } from "@/env/server.mjs";
 import { prisma } from "@/server/db/client";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { CustomSendVerificationRequest } from "./signInEmail";
+import { VerificationTokenFixAdapter } from "@/utils/CustomVerification";
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
@@ -74,11 +76,12 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
   },
-  adapter: PrismaAdapter(prisma),
+  adapter: VerificationTokenFixAdapter(PrismaAdapter(prisma)),
   providers: [
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true
     }),
     EmailProvider({
       server: env.EMAIL_SERVER,
@@ -102,4 +105,10 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export default NextAuth(authOptions);
+export default async function auth(req: NextApiRequest, res: NextApiResponse) {
+  // Do whatever you want here, before the request is passed down to `NextAuth`
+  if (req.method === 'HEAD') {
+    return res.status(200).end();
+  }
+  return await NextAuth(req, res, authOptions);
+}

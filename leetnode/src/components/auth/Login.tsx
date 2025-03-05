@@ -51,7 +51,7 @@ export default function Login({
     onSuccess: (data) => {
       if (!data?.data.emailAllowed) {
         toast.error(
-          "Unfortunately you are not authorized to access LeetNode without a valid invite. \n\nIn the meantime, you may join our waitlist or if you think this is a mistake, please contact support."
+          "Unfortunately you are not authorized to access LeetNode without registering. \n\n Please register your email first by clicking 'Join here'."
         );
         setEmailLoginIsLoading(false);
       } else {
@@ -60,8 +60,19 @@ export default function Login({
     },
   });
 
-  const { mutate: handleJoinWaitlist } = useMutation({
-    mutationFn: () => axios.post(`/api/auth/joinWaitlist?email=${email}`),
+  // const { mutate: handleJoinWaitlist } = useMutation({
+  //   mutationFn: () => axios.post(`/api/auth/joinWaitlist?email=${email}`),
+  //   onSuccess: (data) => {
+  //     if (data?.status === 201) {
+  //       setEmail("");
+  //       setLoginMenuOpened(false);
+  //     }
+  //     setEmailLoginIsLoading(false);
+  //   },
+  // });
+
+  const { mutate: handleJoinUsers } = useMutation({
+    mutationFn: () => axios.post(`/api/auth/addUser?email=${email}`),
     onSuccess: (data) => {
       if (data?.status === 201) {
         setEmail("");
@@ -102,7 +113,7 @@ export default function Login({
             radius="md"
             name="email"
             type="email"
-            placeholder="Invite Email"
+            placeholder="Registered Email"
             disabled={emailLoginIsLoading}
             value={email}
             onChange={(e) => setEmail(e.currentTarget.value.trim())}
@@ -117,7 +128,7 @@ export default function Login({
             }}
           />
           <Text size="xs" color="dimmed">
-            Enter the email address stated in your invite
+            Enter the email address used for registration
           </Text>
           <Group position="apart">
             <Group spacing="xs">
@@ -156,10 +167,10 @@ export default function Login({
                   return;
                 }
                 setEmailLoginIsLoading(true);
-                handleJoinWaitlist();
+                handleJoinUsers();
               }}
             >
-              Join Waitlist
+              Join Here!
             </Button>
           </Group>
         </Stack>

@@ -139,6 +139,7 @@ model Course {
   posts                  Post[]
   attempts               Attempt[]
   courseMedia            CourseMedia[]
+  courseVideo            CourseVideo[]
   questionsWithAddedTime QuestionWithAddedTime[]
 }
 
@@ -147,6 +148,16 @@ model CourseMedia {
   courseSlug     String
   courseMediaURL String @db.VarChar(500)
   mediaName      String
+  course         Course @relation(fields: [courseSlug], references: [courseSlug], onDelete: Cascade)
+
+  @@index([courseSlug])
+}
+
+model CourseVideo {
+  publicId       String @id
+  courseSlug     String
+  courseVideoURL String @db.VarChar(500)
+  videoName      String
   course         Course @relation(fields: [courseSlug], references: [courseSlug], onDelete: Cascade)
 
   @@index([courseSlug])
