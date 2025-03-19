@@ -136,7 +136,7 @@ export default function Consent() {
           <h4>Whom should I call if I have any questions or problems?</h4>
           <p>
             Please contact the Principal Investigator&apos;s research assistant,
-            [Zac, <code>e0426185@u.nus.edu</code>] for all research-related
+            [Juncheng Man, <code>juncheng.man@u.nus.edu</code>] for all research-related
             matters. Your inquiries will be anonymized before they are forwarded
             to the Principal Investigator for a response.
           </p>

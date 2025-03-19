@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import Footer from "@/components/Footer";
 import Consent from "@/components/forms/Consent";
 import Header from "@/components/Header";
-import Navbar from "@/components/Navbar";
+
 import {
   Button,
   Center,
@@ -76,7 +76,6 @@ export default function ConsentPage() {
   return (
     <>
       <Header title="NUS Data Consent Form" />
-      <Navbar />
       <form onSubmit={handleSubmit}>
         <Stack
           align="center"

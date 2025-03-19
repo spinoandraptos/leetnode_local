@@ -124,7 +124,7 @@ export default function CourseMainPage({
     learn: [
       { label: "Overview", icon: IconApps },
       courseDetails.courseMedia.length > 0
-        ? { label: "Lecture Slides", icon: IconPresentation }
+        ? { label: "Supplementary Lecture Slides", icon: IconPresentation }
         : null,
       courseDetails.video ? { label: "Lecture Videos", icon: IconVideo } : null,
       courseDetails.markdown
@@ -281,7 +281,7 @@ export default function CourseMainPage({
               />
             </TypographyStylesProvider>
           </Container>
-        ) : active === "Lecture Slides" ? (
+        ) : active === "Supplementary Lecture Slides" ? (
           courseDetails.courseMedia.map((media) => (
             <Stack align="center" key={media.publicId}>
               <Flex align="center" gap="md">
