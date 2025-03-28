@@ -36,6 +36,7 @@ export default async function handler(
       name?: string;
       nusnetId?: string;
     } = req.body;
+    
 
     if (!name || !nusnetId) {
       // User chooses to remain anonymous
@@ -65,7 +66,6 @@ export default async function handler(
         },
       });
     }
-
     res.status(200).json({ message: "Welcome to LeetNode!" });
   }
 }

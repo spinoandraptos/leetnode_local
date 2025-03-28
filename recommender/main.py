@@ -51,7 +51,7 @@ def get_model() -> Model:
     """
 
     model = Model()
-    model.load("model.pkl")
+    model.load("model_updated.pkl")
     return model
 
 

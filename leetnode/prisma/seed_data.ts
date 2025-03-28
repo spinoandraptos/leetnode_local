@@ -45,12 +45,6 @@ export const Topics: Topic[] = [
     topicPrior: 0.32094,
   },
   {
-    topicSlug: "current-division-principle",
-    topicName: "Current Division Principle",
-    topicLevel: Level.Foundational,
-    topicPrior: 0.25,
-  },
-  {
     topicSlug: "thevenin-equivalent-circuit",
     topicName: "Thevenin Equivalent Circuit",
     topicLevel: Level.Foundational,
@@ -61,18 +55,6 @@ export const Topics: Topic[] = [
     topicName: "Node Voltage Analysis Technique",
     topicLevel: Level.Foundational,
     topicPrior: 0.44625,
-  },
-  {
-    topicSlug: "rc-steady-state-analysis",
-    topicName: "Steady State Analysis of RC Circuits",
-    topicLevel: Level.Intermediate,
-    topicPrior: 0.2,
-  },
-  {
-    topicSlug: "equivalent-capacitance",
-    topicName: "Equivalent Capacitance When Connected in Series or Parallel",
-    topicLevel: Level.Intermediate,
-    topicPrior: 0.25,
   },
   {
     topicSlug: "energy-stored-in-capacitors",
@@ -87,18 +69,6 @@ export const Topics: Topic[] = [
     topicPrior: 0.28875,
   },
   {
-    topicSlug: "rl-steady-state-analysis",
-    topicName: "Steady State Analysis of RL Circuits",
-    topicLevel: Level.Intermediate,
-    topicPrior: 0.345,
-  },
-  {
-    topicSlug: "equivalent-inductance",
-    topicName: "Equivalent Inductance When Connected in Series or Parallel",
-    topicLevel: Level.Intermediate,
-    topicPrior: 0.25,
-  },
-  {
     topicSlug: "energy-stored-in-inductors",
     topicName: "Energy Stored in Inductors",
     topicLevel: Level.Intermediate,
@@ -111,12 +81,6 @@ export const Topics: Topic[] = [
     topicPrior: 0.3225,
   },
   {
-    topicSlug: "rlc-circuit-analysis",
-    topicName: "Analysis of RLC Circuits",
-    topicLevel: Level.Intermediate,
-    topicPrior: 0.25,
-  },
-  {
     topicSlug: "inverting-non-inverting-amplifier-gains",
     topicName: "Gains of Inverting and Non-Inverting Amplifiers",
     topicLevel: Level.Advanced,
@@ -125,12 +89,6 @@ export const Topics: Topic[] = [
   {
     topicSlug: "opamp-circuit-analysis",
     topicName: "Analysis of Circuits Containing Op-Amps",
-    topicLevel: Level.Advanced,
-    topicPrior: 0.25,
-  },
-  {
-    topicSlug: "opamp-golden-rules",
-    topicName: "Op-Amp Golden Rules",
     topicLevel: Level.Advanced,
     topicPrior: 0.25,
   },
@@ -153,18 +111,11 @@ export const Topics: Topic[] = [
     topicPrior: 0.25,
   },
   {
-    topicSlug: "dc-motors-power-calculation",
-    topicName:
-      "Calculation of Mechanical Power & Electrical Power of DC Motors",
-    topicLevel: Level.Advanced,
+    topicSlug: "voltage-current-turn-ratio-relationship",
+    topicName: "Calculation of Voltage, Current, and Turn Ratio of AC Transformers",
+    topicLevel: Level.Intermediate,
     topicPrior: 0.25,
-  },
-  {
-    topicSlug: "torque-equation",
-    topicName: "Torque Equation",
-    topicLevel: Level.Advanced,
-    topicPrior: 0.25,
-  },
+  }
 ];
 
 export const Courses: {

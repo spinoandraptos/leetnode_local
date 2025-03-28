@@ -37,32 +37,33 @@ export default function ConsentPage() {
     queryFn: () =>
       axios.get<{
         name?: string;
-        nusId?: string;
+        nusnetId?: string;
         consentDate?: Date;
         isNewUser: boolean;
       }>("/api/init"),
   });
 
   const { mutate: getUserConsent, isLoading: mutationIsLoading } = useMutation({
-    mutationFn: ({ name, nusId }: { name?: string; nusId?: string }) =>
-      axios.post("/api/init", { name, nusId }),
+    mutationFn: ({ name, nusnetId }: { name?: string; nusnetId?: string }) => {
+      return axios.post("/api/init", { name, nusnetId })
+    },
     onSuccess: () => {
       router.push("/courses");
     },
   });
 
   const [fullname, setFullname] = useState("");
-  const [nusId, setNusId] = useState("");
+  const [nusnetId, setNusId] = useState("");
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const name = user?.data.name ?? fullname.trim();
-    if (name.length < 4 || nusId.trim().length !== 9) {
+    if (name.length < 4 || nusnetId.trim().length !== 9) {
       toast.error(
         "Please enter your fullname and NUSNET ID if you wish to consent to the study."
       );
       return;
     }
-    getUserConsent({ name, nusId });
+    getUserConsent({ name, nusnetId });
   };
 
   if (!user) {
@@ -141,14 +142,14 @@ export default function ConsentPage() {
               <TextInput
                 mt="xs"
                 label="Student Number"
-                placeholder="A0123456Z"
+                placeholder={user?.data.nusnetId}
                 type="text"
                 disabled={user?.data.consentDate !== null}
-                value={user?.data.nusId ?? nusId}
+                value={nusnetId}
                 onChange={(e) => setNusId(e.target.value.toUpperCase())}
                 error={
-                  nusId.trim().length > 0 &&
-                  nusId.trim().length !== 9 &&
+                  nusnetId.trim().length > 0 &&
+                  nusnetId.trim().length !== 9 &&
                   "Invalid NUSNET ID"
                 }
               />

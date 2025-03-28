@@ -10,7 +10,7 @@ RUN pip uninstall numpy
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 COPY --link leetnode/prisma/seed_data.ts ./
-COPY --link recommender/model.pkl ./
+COPY --link recommender/model_updated.pkl ./
 COPY --link recommender/main.py ./
 
 EXPOSE 8000
