@@ -38,17 +38,7 @@ export default async function handler(
     } = req.body;
     
 
-    if (!name || !nusnetId) {
-      // User chooses to remain anonymous
-      await prisma.user.update({
-        where: {
-          id: session?.user?.id,
-        },
-        data: {
-          isNewUser: false,
-        },
-      });
-    } else {
+    if (name && nusnetId) {
       // User consents to share their info
       if (!(name.length > 0 && nusnetId.length === 9)) {
         res.status(400).json({ message: "Missing name or nusnetId" });
@@ -62,10 +52,22 @@ export default async function handler(
           name,
           nusnetId,
           consentDate: new Date(),
-          isNewUser: false,
         },
       });
     }
     res.status(200).json({ message: "Welcome to LeetNode!" });
+  }
+
+  // PUT request to make user not New User
+  if (req.method === "PUT") {
+      await prisma.user.update({
+        where: {
+          id: session?.user?.id,
+        },
+        data: {
+          isNewUser: false,
+        },
+      });
+    res.status(200).json({ message: "User Initialised" });
   }
 }

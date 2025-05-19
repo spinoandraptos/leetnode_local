@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import Footer from "@/components/Footer";
 import Consent from "@/components/forms/Consent";
 import Header from "@/components/Header";
+import Navbar from "@/components/Navbar";
 
 import {
   Button,
@@ -48,7 +49,7 @@ export default function ConsentPage() {
       return axios.post("/api/init", { name, nusnetId })
     },
     onSuccess: () => {
-      router.push("/courses");
+      router.push("/quiz?courseSlug=welcome-quiz");
     },
   });
 
@@ -73,10 +74,10 @@ export default function ConsentPage() {
       </Center>
     );
   }
-
   return (
     <>
       <Header title="NUS Data Consent Form" />
+      {!user?.data.isNewUser && <Navbar />}
       <form onSubmit={handleSubmit}>
         <Stack
           align="center"
@@ -180,7 +181,7 @@ export default function ConsentPage() {
                     loading={mutationIsLoading}
                     onClick={() => {
                       getUserConsent({});
-                      router.push("/courses");
+                      router.push("/quiz?courseSlug=welcome-quiz");
                     }}
                   >
                     I wish to remain anonymous

@@ -59,7 +59,7 @@ export default function CoursesPage() {
     return (
       <Card withBorder radius="md" m="md" p={0} className={classes.card}>
         <Link
-          href={`/courses/${slug}`}
+          href={slug === "welcome-quiz" ? `/quiz?courseSlug=welcome-quiz` : `/courses/${slug}`}
           passHref
           className={`${
             theme.colorScheme === "dark" ? "text-white" : "text-black"

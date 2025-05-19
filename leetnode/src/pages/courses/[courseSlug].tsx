@@ -463,7 +463,6 @@ export async function getStaticPaths() {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { params } = context;
-
   const courseDetails = await getCourseDetails(params?.courseSlug as string);
 
   console.log(
