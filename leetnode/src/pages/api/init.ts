@@ -55,7 +55,7 @@ export default async function handler(
         },
       });
     }
-    res.status(200).json({ message: "Welcome to LeetNode!" });
+    res.status(200).json({ message: "Consent Submitted" });
   }
 
   // PUT request to make user not New User
@@ -68,6 +68,6 @@ export default async function handler(
           isNewUser: false,
         },
       });
-    res.status(200).json({ message: "User Initialised" });
+    res.status(200).json({ message: "Welcome to LeetNode!" });
   }
 }
