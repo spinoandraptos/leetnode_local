@@ -60,7 +60,7 @@ export default function QuizQuestion() {
   const theme = useMantineTheme();
   const { classes, cx } = useStyles();
 
-  const maxQnCount = 2;
+  const maxQnCount = 15;
 
   const { data: user } = useQuery({
     queryKey: ["user-consent"],
@@ -75,7 +75,7 @@ export default function QuizQuestion() {
   const [qnCount, setQnCount] = useState(0);
   const [active, setActive] = useSessionStorage({
     key: "quizActiveTab",
-    defaultValue: qnCount === maxQnCount ? "Questions" : "Your Attempt",
+    defaultValue: (qnCount === maxQnCount || !user?.data.isNewUser) ? "Questions" : "Your Attempt",
   });
 
   const currentCourseSlug = "welcome-quiz" as string;
@@ -286,7 +286,7 @@ export default function QuizQuestion() {
 
     
 
-  if (qnCount === maxQnCount) {
+  if (qnCount === maxQnCount || !user?.data.isNewUser) {
     return (
       <AppShell
       className={classes.appshell}
