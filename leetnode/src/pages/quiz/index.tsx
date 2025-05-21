@@ -75,7 +75,7 @@ export default function QuizQuestion() {
   const [qnCount, setQnCount] = useState(0);
   const [active, setActive] = useSessionStorage({
     key: "quizActiveTab",
-    defaultValue: (qnCount === maxQnCount || !user?.data.isNewUser) ? "Questions" : "Your Attempt",
+    defaultValue: (qnCount === maxQnCount || !user?.data.isNewUser) ? "Your Attempt" : "Questions" ,
   });
 
   const currentCourseSlug = "welcome-quiz" as string;
