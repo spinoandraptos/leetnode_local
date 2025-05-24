@@ -13,6 +13,12 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const session = await getServerSession(req, res, authOptions);
+  
+  // Exclude 2025 Questions from the bank temporarily
+  const excluded2025QuestionIds = [
+    89, 98, 90, 91, 92, 93, 94, 95, 96, 97,
+    79, 106, 107, 108, 99, 74, 100, 101, 102, 103, 104, 105
+  ];
 
   // Questions specific to user and course, newest first
   let userCourseQuestionsWithAddedTime =
@@ -20,6 +26,11 @@ export default async function handler(
       where: {
         userId: session?.user?.id,
         courseSlug: req.query.courseSlug as string,
+        NOT: {
+          questionId: {
+            in: excluded2025QuestionIds,
+          },
+        },
       },
       include: {
         question: {

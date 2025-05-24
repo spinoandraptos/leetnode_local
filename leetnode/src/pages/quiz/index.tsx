@@ -196,7 +196,7 @@ export default function QuizQuestion() {
             message: (
               <>
                 Question(s) attempted:{" "}
-                {(userInfo.attempts[lastActive.toDateString()] ?? 0) + 1} 🔋
+                {qnCount} 🔋
                 <span className="text-yellow-600">
                   +
                   {(userInfo.attempts[lastActive.toDateString()] ?? 0) === 0
@@ -308,7 +308,9 @@ export default function QuizQuestion() {
               <Divider my="sm" variant="dotted" />
               <Link href="/courses" passHref>
                 <Box className={classes.link} onClick={() => {
-                      initUser();
+                      if (user?.data.isNewUser) {
+                        initUser();
+                      }
                     }}>
                   <IconArrowBarLeft className={classes.linkIcon} stroke={1.5} />
                   <span>Proceed to Main Page</span>
@@ -321,7 +323,7 @@ export default function QuizQuestion() {
       <ScrollArea>
       { active === "Course Discussion" ? (
           <CourseDiscussion courseName={""} />
-        ) :active === "Your Attempt" ? (
+        ) :(active === "Your Attempt" || active === "Questions") ? (
           <QuestionHistory courseSlug={UCQAT?.data.courseSlug} />
         ) : active === "Your Mastery" ? (
           <ResultsPage />
