@@ -121,7 +121,7 @@ export default function QuizQuestion() {
       }
     }, [UCQAT, refetch, isFetching]);
   
-    return { UCQAT, refetch };
+    return { UCQAT };
   };
 
   const { UCQAT } = useUCQAT(currentCourseSlug);

@@ -138,8 +138,11 @@ export default async function handler(
       courseSlug: courseSlug,
     });
   } catch (e) {
-    console.error(e);
-    res.status(400).json({
+    if (e instanceof AxiosError) {
+      console.error("Axios Error:", e.response?.data || e.message);
+    } else {
+      console.error("Error:", e);
+    }    res.status(400).json({
       message:
         e instanceof z.ZodError || e instanceof AxiosError || e instanceof Error
           ? e.message

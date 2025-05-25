@@ -25,10 +25,17 @@ export const RecommendQuestion = async (
     throw new Error("Invalid course slug or course has no relevant topics");
   }
 
-  const recommendedTopic = CustomMath.nRandomItems(
+  let recommendedTopic = CustomMath.nRandomItems(
     1,
     relevantTopics.topics
   )[0] as Topic;
+
+  while (recommendedTopic.topicSlug === 'kvl'){
+    recommendedTopic = CustomMath.nRandomItems(
+      1,
+      relevantTopics.topics
+    )[0] as Topic;
+  }
 
   console.log(
     `[${courseSlug}] RECOMMENDED TOPIC: `,
@@ -67,7 +74,7 @@ export const RecommendQuestion = async (
       },
     });
   }
-
+  console.log(relevantQuestions)
   const recommendedQuestion = CustomMath.nRandomItems(
     1,
     relevantQuestions
