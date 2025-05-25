@@ -2,7 +2,7 @@ import axios from "axios";
 import DOMPurify from "dompurify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
 import {
@@ -60,7 +60,7 @@ export default function QuizQuestion() {
   const theme = useMantineTheme();
   const { classes, cx } = useStyles();
 
-  const maxQnCount = 15;
+  const maxQnCount = 16;
 
   const { data: user } = useQuery({
     queryKey: ["user-consent"],
@@ -72,7 +72,7 @@ export default function QuizQuestion() {
         isNewUser: boolean;
       }>("/api/init"),
   });
-  const [qnCount, setQnCount] = useState(0);
+  const [qnCount, setQnCount] = useState(1);
   const [active, setActive] = useSessionStorage({
     key: "quizActiveTab",
     defaultValue: (qnCount === maxQnCount || !user?.data.isNewUser) ? "Your Attempt" : "Questions" ,
@@ -81,21 +81,50 @@ export default function QuizQuestion() {
   const currentCourseSlug = "welcome-quiz" as string;
 
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const [prevQn, setPrevQn] = useState(0);
   const [hintsOpened, setHintsOpened] = useState<boolean>(false);
-
-  const { data: UCQAT } = useQuery({
-    queryKey: ["get-ucqat"],
-    queryFn: () =>
-      axios.get<
-        QuestionWithAddedTime & {
-          question: Question & {
-            topic: {
-              topicName: string;
-            };
-          };
+  
+  const useUCQAT = (currentCourseSlug: string) => {  
+    const {
+      data: UCQAT,
+      refetch,
+      isFetching,
+    } = useQuery({
+      queryKey: ["get-ucqat"],
+      queryFn: () =>
+        axios
+          .get<
+            QuestionWithAddedTime & {
+              question: Question & {
+                topic: {
+                  topicName: string;
+                };
+              };
+            }
+          >(`/api/question/questionsWithAddedTime?courseSlug=${currentCourseSlug}&prevId=${prevQn}`)
+    });
+  
+    // Effect to check for duplicate question ID and refetch if needed
+    useEffect(() => {
+      if (UCQAT?.data.question?.questionId) {
+        const currentQuestionId = UCQAT?.data.question.questionId;
+  
+        if (prevQn === currentQuestionId && !isFetching) {
+          // Same question ID — refetch
+          console.log("Repeat question detected, refetching...");
+          queryClient.invalidateQueries(["get-ucqat"]);
+          refetch();
         }
-      >(`/api/question/questionsWithAddedTime?courseSlug=${currentCourseSlug}`),
-  });
+  
+        // Update ref to the current question ID
+        setPrevQn(currentQuestionId);
+      }
+    }, [UCQAT, refetch, isFetching]);
+  
+    return { UCQAT, refetch };
+  };
+
+  const { UCQAT } = useUCQAT(currentCourseSlug);
 
   const { mutate: initUser, isLoading: mutationIsLoading } = useMutation({
     mutationFn: () => {
@@ -407,9 +436,9 @@ export default function QuizQuestion() {
               mt="xl"
               value={selectedKeys[0]}
               onChange={(value) => {
-                console.log(
-                  value === answerOptions.find((item) => item.isCorrect)?.key
-                );
+                // console.log(
+                //   value === answerOptions.find((item) => item.isCorrect)?.key
+                // );
                 setSelectedKeys([value]);
               }}
               orientation="vertical"

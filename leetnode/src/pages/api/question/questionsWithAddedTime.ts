@@ -20,6 +20,15 @@ export default async function handler(
     79, 106, 107, 108, 99, 74, 100, 101, 102, 103, 104, 105
   ];
 
+  const prevId = req.query.prevId as string
+  if (prevId) {
+    const numericPrevId = parseInt(prevId, 10);
+  
+    if (!excluded2025QuestionIds.includes(numericPrevId)) {
+      excluded2025QuestionIds.push(numericPrevId);
+    }
+  }
+
   // Questions specific to user and course, newest first
   let userCourseQuestionsWithAddedTime =
     await prisma.questionWithAddedTime.findFirst({
