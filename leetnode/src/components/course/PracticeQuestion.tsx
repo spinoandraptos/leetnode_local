@@ -2,7 +2,7 @@ import axios from "axios";
 import DOMPurify from "dompurify";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { toast } from "react-hot-toast";
 
 import VariablesBox from "@/components/editor/VariablesBox";
@@ -48,22 +48,52 @@ export default function PracticeQuestion() {
   const router = useRouter();
   const currentCourseSlug = router.query.courseSlug as string;
 
+  const [qnCount, setQnCount] = useState(1);
+  const [prevQn, setPrevQn] = useState(0);
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [hintsOpened, setHintsOpened] = useState<boolean>(false);
 
-  const { data: UCQAT } = useQuery({
-    queryKey: ["get-ucqat"],
-    queryFn: () =>
-      axios.get<
-        QuestionWithAddedTime & {
-          question: Question & {
-            topic: {
-              topicName: string;
-            };
-          };
+  const useUCQAT = (currentCourseSlug: string) => {  
+    const {
+      data: UCQAT,
+      refetch,
+      isFetching,
+    } = useQuery({
+      queryKey: ["get-ucqat"],
+      queryFn: () =>
+        axios
+          .get<
+            QuestionWithAddedTime & {
+              question: Question & {
+                topic: {
+                  topicName: string;
+                };
+              };
+            }
+          >(`/api/question/questionsWithAddedTime?courseSlug=${currentCourseSlug}&prevId=${prevQn}`)
+    });
+  
+    // Effect to check for duplicate question ID and refetch if needed
+    useEffect(() => {
+      if (UCQAT?.data.question?.questionId) {
+        const currentQuestionId = UCQAT?.data.question.questionId;
+  
+        if (prevQn === currentQuestionId && !isFetching) {
+          // Same question ID — refetch
+          console.log("Repeat question detected, refetching...");
+          queryClient.invalidateQueries(["get-ucqat"]);
+          refetch();
         }
-      >(`/api/question/questionsWithAddedTime?courseSlug=${currentCourseSlug}`),
-  });
+  
+        // Update ref to the current question ID
+        setPrevQn(currentQuestionId);
+      }
+    }, [UCQAT, refetch, isFetching]);
+  
+    return { UCQAT };
+  };
+
+  const { UCQAT } = useUCQAT(currentCourseSlug);
 
   const useSubmitAnswer = () => {
     const queryClient = useQueryClient();
@@ -106,6 +136,7 @@ export default function PracticeQuestion() {
             duration: 5000,
           }
         );
+        setQnCount ((prev) => prev + 1);
         queryClient.invalidateQueries(["get-ucqat"]);
         queryClient.invalidateQueries(["get-attempts", data.courseSlug]);
         updatePoints(); // Update points for attempting questions
@@ -155,7 +186,7 @@ export default function PracticeQuestion() {
             message: (
               <>
                 Question(s) attempted:{" "}
-                {(userInfo.attempts[lastActive.toDateString()] ?? 0) + 1} 🔋
+                {qnCount} 🔋
                 <span className="text-yellow-600">
                   +
                   {(userInfo.attempts[lastActive.toDateString()] ?? 0) === 0

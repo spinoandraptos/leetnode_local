@@ -263,7 +263,7 @@ const CourseDiscussion = ({ courseName }: { courseName: string }) => {
               <Flex gap="sm" align="center" justify="space-between">
                 <Flex align="center" gap="sm" pr="sm">
                   <Image
-                    src={post.user.image}
+                    src={post.user.image || ""}
                     alt={post.user.username}
                     className="rounded-full"
                     width={30}

@@ -395,7 +395,7 @@ export default function Navbar({
                 </Menu.Item>
                 <Menu.Item
                   component={Link}
-                  href="https://forms.gle/XCwZF28MKbaDnwGF9"
+                  href="https://forms.gle/RrzsyFvwnHT83g3v9"
                   target="_blank"
                   icon={<IconCheckupList size={14} stroke={1.5} />}
                   color="yellow"
