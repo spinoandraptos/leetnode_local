@@ -12,7 +12,6 @@ export default async function handler(
 
   const allAttempts = await prisma.attempt.findMany({
     include: {
-      user: true,
       questionWithAddedTime: {
         include: {
           question: {

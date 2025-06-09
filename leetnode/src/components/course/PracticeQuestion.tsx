@@ -10,6 +10,8 @@ import Latex from "@/components/Latex";
 import { QuestionDifficultyBadge } from "@/components/misc/Badges";
 import { QuestionDataType } from "@/types/question-types";
 import { CustomMath } from "@/utils/CustomMath";
+import { Role } from "@prisma/client";
+
 import {
   ActionIcon,
   Box,
@@ -253,6 +255,18 @@ export default function PracticeQuestion() {
           });
         }}
       >
+        {(session?.data?.user?.role === Role.SUPERUSER ||
+                  session?.data?.user?.role === Role.ADMIN) && (
+          <div style={{ 
+            borderBottom: '1px solid #ccc', 
+            padding: '8px 16px', 
+            fontSize: '14px', 
+            fontWeight: 'bold', 
+            backgroundColor: '#f9f9f9' 
+          }}>
+            {UCQAT?.data?.question?.questionTitle ?? "No title available"}
+          </div>
+        )}
         <QuestionDifficultyBadge
           questionDifficulty={UCQAT.data.question.questionDifficulty}
           {...{ radius: "lg", size: "md" }}
