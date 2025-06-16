@@ -21,7 +21,6 @@ export default async function handler(
         nusnetId: true,
         consentDate: true,
         isNewUser: true,
-        role: true
       },
     });
 

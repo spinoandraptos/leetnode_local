@@ -267,6 +267,18 @@ export default function PracticeQuestion() {
             {UCQAT?.data?.question?.questionTitle ?? "No title available"}
           </div>
         )}
+        {/* TODO: Remove once all questions are in order? */}
+        {(session?.data?.user?.role === Role.USER) && (
+          <div style={{ 
+            borderBottom: '1px solid #ccc', 
+            padding: '8px 16px', 
+            fontSize: '14px', 
+            fontWeight: 'bold', 
+            backgroundColor: '#f9f9f9' 
+          }}>
+            {"QID:" + (UCQAT?.data?.question?.questionId ?? "No ID available")}
+          </div>
+        )}
         <QuestionDifficultyBadge
           questionDifficulty={UCQAT.data.question.questionDifficulty}
           {...{ radius: "lg", size: "md" }}
